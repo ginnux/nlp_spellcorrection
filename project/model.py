@@ -6,7 +6,7 @@ import re
 
 # 词典库
 vocab = set(
-    [line.rstrip() for line in open("./resource/vocab.txt")]
+    [line.rstrip() for line in open("vocab.txt")]
 )  # 用set效率高一些(时间复杂度)
 
 
@@ -90,6 +90,8 @@ for doc in corpus:
         else:
             bigram_count[bigram] = 1
 
+import re
+
 # 用户打错的概率统计 - channel probability
 # 创建一个字典来存储channel probabilities
 channel_prob = {}
@@ -97,17 +99,31 @@ total_errors = 0
 
 i = 0
 # 解析错误数据并计算总错误次数
-for line in open("count_1edit_test2.txt"):
+for line in open('count_1edit.txt'):
     i += 1
-    print(f"{i}\n")
-    correct, parts = line.split("|")
-    new_parts = parts.split()
-    mistake = new_parts[0]
-    count = int(new_parts[1])  # 416 678 1226 1309 1404 1586
-    """parts = line.split()
-    error_pair = parts[0].strip()
-    count = int(parts[1].strip())
-    correct, mistake = error_pair.split("|")"""
+
+    # 正则表达式找到错误次数
+    count = re.findall(r'\d+', line)[-1]
+
+    # 从末尾剥离数字
+    line = line.replace(count, "")
+    # 剥离制表符
+    if "\t" in line:
+        line = line.replace("\t", "")
+    # 判断空格在不在后段
+    first, last = line.split("|")
+
+    if " " in last:
+        # 去除多个空格为一个
+        if re.match(r" {2,}", line):
+            multi_spaces = re.findall(r" {2,}", line)
+            for space in multi_spaces:
+                line = line.replace(space, " ")
+
+    # 正常情况
+    correct, mistake = line.split("|")
+
+    count = int(count)
 
     if correct not in channel_prob:
         channel_prob[correct] = {}
@@ -121,13 +137,15 @@ for correct in channel_prob:
         channel_prob[correct][mistake] /= total_errors
 
 import numpy as np
+import re
+
 
 V = len(term_count.keys())
 file = open("testdata.txt", "r")
 results = []
 i = 1
 for line in file:
-    line = re.sub(r"([,.])", r" \1 ", line)
+    line = re.sub(r"([,.'])", r" \1 ", line)
     items = line.rstrip().split("\t")
     line = items[2].split()
     corrected_line = line
@@ -137,12 +155,12 @@ for line in file:
         if word not in vocab:
             # 需要替换word成正确的单词
             # Step1: 生成所有的(valid)候选集合
-            candidates = generate_candidates(word)  # + generate_edit_two(word)
+            candidates = generate_candidates(word)
 
             # 一种方式： if candidate = [], 多生成几个candidates, 比如生成编辑距离不大于2的
             # TODO ： 根据条件生成更多的候选集合
             if len(candidates) < 1:
-                continue
+                candidates = generate_edit_two(word)
             probs = []
             # 对于每一个candidate, 计算它的score
             # score = p(correct)*p(mistake|correct)
@@ -186,11 +204,19 @@ for line in file:
                         prob += np.log(1.0 / V)
                 probs.append(prob)
 
-            max_idx = probs.index(max(probs))
-            print(word, candidates[max_idx])
-            corrected_line[j] = candidates[max_idx]
+
+            if probs:
+                max_idx = probs.index(max(probs))
+                if len(word) == 1:# and word in "abcdefghijklmnopqrstuvwxyz":
+                    corrected_line[j] = word  # 不替换单个字母
+                else:
+                    corrected_line[j] = candidates[max_idx]
+                    print(word, candidates[max_idx])
         j += 1
     corrected_sentence = " ".join(corrected_line)
+    corrected_sentence = re.sub(r"\s(['])\s", r"\1", corrected_sentence)  # 去除标点前的空格
+    corrected_sentence = re.sub(r"\s([.])\s", r"\1", corrected_sentence)  # 去除标点前的空格
+    corrected_sentence = re.sub(r"\s([,])", r"\1", corrected_sentence)  # 去除标点前的空格
     results.append(f"{i}\t{corrected_sentence}")
     i += 1
 

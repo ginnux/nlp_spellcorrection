@@ -12,4 +12,7 @@ for i in range(1000):
     resultset = set(nltk.word_tokenize(resultline))
     if ansset == resultset:
         count += 1
+    else:
+        result = " ".join(resultset)
+        print(f"{i}\t{resultline}")
 print("Accuracy is : %.2f%%" % (count * 1.00 / 10))
