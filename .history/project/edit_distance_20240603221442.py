@@ -25,7 +25,7 @@ class CandidatesGenerator:
         #       delete: ppl, apl, app
 
         # 假设使用26个字符
-        letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        letters = "abcdefghijklmnopqrstuvwxyz" + "abcdefghijklmnopqrstuvwxyz".upper()
         # 将单词在不同的位置拆分成2个字符串，然后分别进行insert，delete你replace操作,
         # 拆分形式为：[('', 'apple'), ('a', 'pple'), ('ap', 'ple'), ('app', 'le'), ('appl', 'e'), ('apple', '')]
         splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
@@ -88,7 +88,7 @@ class CandidatesGenerator:
 
 
 if __name__ == "__main__":
-    vocab = {line.rstrip() for line in open("vocab.txt")}
+    vocab = {line.rstrip() for line in open("project/vocab.txt")}
 
     CG = CandidatesGenerator(vocab=vocab)
-    print(CG.generate_candidates("HKES", max_distance=1))
+    print(CG.generate_candidates("appl", max_distance=2))

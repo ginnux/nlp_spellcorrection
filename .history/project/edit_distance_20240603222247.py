@@ -91,4 +91,4 @@ if __name__ == "__main__":
     vocab = {line.rstrip() for line in open("vocab.txt")}
 
     CG = CandidatesGenerator(vocab=vocab)
-    print(CG.generate_candidates("HKES", max_distance=1))
+    print(CG.generate_candidates("orpgress", max_distance=1))

@@ -6,8 +6,6 @@ ansfile = open(anspath, "r")
 resultfile = open(resultpath, "r")
 vocab = {line.rstrip() for line in open("vocab.txt")}
 count = 0
-nworde_count = 0
-worde_count = 0
 for i in range(1000):
     ansline = ansfile.readline().split("\t")[1]
     anslist = nltk.word_tokenize(ansline)
@@ -26,13 +24,9 @@ for i in range(1000):
             if anslist[w] != resultlist[w]:
                 print("ans: " + anslist[w] + " result: " + resultlist[w])
                 if resultlist[w] not in vocab:
-                    print("非词错误未发现")
-                    nworde_count += 1
+                    print("非词错误非发现")
                 else:
                     print("不是非词错误")
-                    worde_count += 1
-
 print("Accuracy is : %.2f%%" % (count * 1.00 / 10))
-print(f"非词错误数：{nworde_count}，词错误数：{worde_count}")
 
 exit(count)

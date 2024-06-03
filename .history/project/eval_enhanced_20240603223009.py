@@ -26,7 +26,7 @@ for i in range(1000):
             if anslist[w] != resultlist[w]:
                 print("ans: " + anslist[w] + " result: " + resultlist[w])
                 if resultlist[w] not in vocab:
-                    print("非词错误未发现")
+                    print("非词错误非发现")
                     nworde_count += 1
                 else:
                     print("不是非词错误")
