@@ -26,24 +26,18 @@ class CandidatesGenerator:
 
         # 假设使用26个字符
         letters = "abcdefghijklmnopqrstuvwxyz"
-
-        splits = [
-            (word[:i], word[i:]) for i in range(len(word) + 1)
-        ]  # 将单词在不同的位置拆分成2个字符串，然后分别进行insert，delete你replace操作,拆分形式为：[('', 'apple'), ('a', 'pple'), ('ap', 'ple'), ('app', 'le'), ('appl', 'e'), ('apple', '')]
-        # print(splits)
+        # 将单词在不同的位置拆分成2个字符串，然后分别进行insert，delete你replace操作,
+        # 拆分形式为：[('', 'apple'), ('a', 'pple'), ('ap', 'ple'), ('app', 'le'), ('appl', 'e'), ('apple', '')]
+        splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
 
         # insert操作
         inserts = [L + c + R for L, R in splits for c in letters]
         # delete
-        deletes = [
-            L + R[1:] for L, R in splits if R
-        ]  # 判断分割后的字符串R是否为空，不为空，删除R的第一个字符即R[1:]
+        deletes = [L + R[1:] for L, R in splits if R]  # 判断分割后的字符串R是否为空，不为空，删除R的第一个字符即R[1:]
         # transposes
         transposes = [L + R[1] + R[0] + R[2:] for L, R in splits if len(R) > 1]
         # replace
-        replaces = [
-            L + c + R[1:] for L, R in splits if R for c in letters
-        ]  # 替换R的第一个字符,即c+R[1:]
+        replaces = [L + c + R[1:] for L, R in splits if R for c in letters]  # 替换R的第一个字符,即c+R[1:]
         # exchange
         exchanges = [
             word[:i] + word[j] + word[i + 1 : j] + word[i] + word[j + 1 :]
@@ -51,8 +45,7 @@ class CandidatesGenerator:
             for j in range(i + 1, len(word))
         ]
         candidates = set(inserts + deletes + replaces + transposes + exchanges)
-        # print(candidates)
-        # 过来掉不存在于词典库里面的单词
+        # 过滤掉不存在于词典库里面的单词
         return [word for word in candidates if word in self.vocab]
 
     def generate_candidates(self, word, max_distance=1):
@@ -74,7 +67,6 @@ class CandidatesGenerator:
         # 所有编辑距离相同的单词放在一个列表里
         for i in range(1, max_distance + 1):
             # i 为编辑距离，从1开始遍历，将前一个编辑距离的词生成当前编辑距离的词集合
-            # temp
             edit_i = []
             # 遍历上一层的词
             for w in edit_list[i - 1]:
