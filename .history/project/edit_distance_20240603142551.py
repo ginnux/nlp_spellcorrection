@@ -1,14 +1,52 @@
-# 加速生成任意编辑距离的候选词
+def edit_distance_custom(word1, word2):
+    """
+    计算两个单词之间的编辑距离
+    参数:
+    word1: 第一个单词
+    word2: 第二个单词
+
+    返回:
+    编辑距离
+    """
+    m, n = len(word1), len(word2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(m + 1):
+        for j in range(n + 1):
+            if i == 0:
+                dp[i][j] = j  # word1为空，插入所有的word2字符
+            elif j == 0:
+                dp[i][j] = i  # word2为空，删除所有的word1字符
+            elif word1[i - 1] == word2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]  # 字符相等，不需要操作
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1]  # 插入  # 删除
+                )  # 替换
+    return dp[m][n]
+
+
+def generate_candidates(word, vocab, max_distance):
+    """
+    生成编辑距离不大于 max_distance 的单词候选集合
+
+    参数:
+    word: 给定的输入单词（可能错误的输入）
+    max_distance: 最大允许的编辑距离
+
+    返回:
+    所有在词汇表中且编辑距离不大于 max_distance 的候选单词集合
+    """
+    candidates = set()
+
+    for candidate in vocab:
+        if edit_distance_custom(word, candidate) <= max_distance:
+            candidates.add(candidate)
+
+    return candidates
 
 
 class CandidatesGenerator:
-    """
-    加速生成任意编辑距离的候选词
-    调用方法：
-    CG = CandidatesGenerator(vocab=vocab)
-    CG.generate_candidates("appl", max_distance=2)
-    """
-
     def __init__(self, vocab):
         self.vocab = vocab
 
@@ -68,20 +106,21 @@ class CandidatesGenerator:
         # 所有编辑距离相同的单词放在一个列表里
         for i in range(1, max_distance + 1):
             # i 为编辑距离，从1开始遍历，将前一个编辑距离的词生成当前编辑距离的词集合
-            # temp
             edit_i = []
-            # 遍历上一层的词
             for w in edit_list[i - 1]:
-                # 遍历输出的候选词列表
-                outputs = self.candidates(w)
-                for output in outputs:
-                    # 去冗余
-                    if output not in all_candidates:
-                        all_candidates.add(output)
-                        edit_i.append(output)
-            # 将temp列表加入到edit_list中
+                candidates = self.candidates(w)
+                for candidate in candidates:
+                    if candidate not in all_candidates:
+                        all_candidates.add(candidate)
+                        edit_i.append(candidate)
             edit_list.append(edit_i)
 
+        # 合并所有编辑距离的词
+        all_candidates = []
+        for i in range(1, max_distance + 1):
+            all_candidates += edit_list[i]
+        # 去冗余
+        all_candidates = list(set(all_candidates))
         return all_candidates
 
 

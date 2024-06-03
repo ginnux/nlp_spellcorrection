@@ -2,13 +2,6 @@
 
 
 class CandidatesGenerator:
-    """
-    加速生成任意编辑距离的候选词
-    调用方法：
-    CG = CandidatesGenerator(vocab=vocab)
-    CG.generate_candidates("appl", max_distance=2)
-    """
-
     def __init__(self, vocab):
         self.vocab = vocab
 

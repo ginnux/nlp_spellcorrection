@@ -2,13 +2,6 @@
 
 
 class CandidatesGenerator:
-    """
-    加速生成任意编辑距离的候选词
-    调用方法：
-    CG = CandidatesGenerator(vocab=vocab)
-    CG.generate_candidates("appl", max_distance=2)
-    """
-
     def __init__(self, vocab):
         self.vocab = vocab
 
@@ -68,18 +61,13 @@ class CandidatesGenerator:
         # 所有编辑距离相同的单词放在一个列表里
         for i in range(1, max_distance + 1):
             # i 为编辑距离，从1开始遍历，将前一个编辑距离的词生成当前编辑距离的词集合
-            # temp
             edit_i = []
-            # 遍历上一层的词
             for w in edit_list[i - 1]:
-                # 遍历输出的候选词列表
                 outputs = self.candidates(w)
                 for output in outputs:
-                    # 去冗余
                     if output not in all_candidates:
                         all_candidates.add(output)
                         edit_i.append(output)
-            # 将temp列表加入到edit_list中
             edit_list.append(edit_i)
 
         return all_candidates
