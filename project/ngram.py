@@ -1,5 +1,5 @@
 from collections import Counter
-
+import numpy as np
 
 def generate_ngram_models(corpus, n):
     """
@@ -39,5 +39,5 @@ def calculate_smoothed_probability(bigram_count, term_count, V, bigram, term):
     平滑后的概率
     """
     bigram_frequency = bigram_count.get(bigram, 0) + 1  # 加1平滑
-    term_frequency = term_count.get(term, 0) + V  # 加 V 平滑
-    return bigram_frequency / term_frequency
+    term_frequency = term_count.get(term, 0) + V  # 加V平滑
+    return np.log(bigram_frequency / term_frequency)
