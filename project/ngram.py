@@ -13,14 +13,7 @@ def generate_ngram_models(corpus, n):
     term_count = Counter()
     ngram_count = Counter()
 
-    # 获取所有文件的 ID
-    file_ids = corpus.fileids()
-
-    # 从语料库中获取所有句子
-    sentences = [corpus.sents(file_id) for file_id in file_ids]
-    sentences = list(itertools.chain(*sentences))
-
-    for sentence in sentences:
+    for sentence in corpus:
         sentence = ['<s>'] + sentence  # '<s>'表示开头
         for i in range(len(sentence) - n + 1):
             term = sentence[i]
