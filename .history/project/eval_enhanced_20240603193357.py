@@ -23,5 +23,4 @@ for i in range(1000):
             if anslist[w] != resultlist[w]:
                 print("ans: " + anslist[w] + " result: " + resultlist[w])
 print("Accuracy is : %.2f%%" % (count * 1.00 / 10))
-
-exit(count)
+return count * 1.00 / 10
