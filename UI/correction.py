@@ -104,7 +104,7 @@ class spell_correction():
                 # 需要替换word成正确的单词
                 # Step1: 生成所有的(valid)候选集合
                 # 获得编辑距离小于2的候选列表
-                candidates = self.CG.generate_candidates(word, max_distance=max_distance)
+                candidates = self.CG.generate_candidates(word, max_distance=self.max_distance)
                 candidates = list(candidates)
                 probs = []
 
