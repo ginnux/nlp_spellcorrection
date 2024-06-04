@@ -1,5 +1,6 @@
 # nlp_spellcorrection
 HUST NLP homework.
+实现非词错误为0.
 
 # 文件夹结构细则
 - `resources`文件夹用于存放作业原资源文件，一般不作修改。
@@ -10,4 +11,4 @@ HUST NLP homework.
 # TODO List
 - [x] 数字之间的`，`BUG。
 - [x] `'t`被修正的BUG。
-- [ ] 单引号作为引用意义时的BUG。
+- [x] 单引号作为引用意义时的BUG。
