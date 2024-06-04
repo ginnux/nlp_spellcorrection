@@ -101,11 +101,11 @@ class spell_correction():
         j = 0
         # 遍历句子单词
         for word in line:
-            if word not in vocab:
+            if word not in self.vocab:
                 # 需要替换word成正确的单词
                 # Step1: 生成所有的(valid)候选集合
                 # 获得编辑距离小于2的候选列表
-                candidates = CG.generate_candidates(word, max_distance=max_distance)
+                candidates = self.CG.generate_candidates(word, max_distance=max_distance)
                 candidates = list(candidates)
                 probs = []
 
@@ -116,8 +116,8 @@ class spell_correction():
                 for candi in candidates:
                     prob = 0
                     # 计算channel probability
-                    if candi in channel_prob and word in channel_prob[candi]:
-                        prob += np.log(channel_prob[candi][word])
+                    if candi in self.channel_prob and word in self.channel_prob[candi]:
+                        prob += np.log(self.channel_prob[candi][word])
                     else:
                         prob += np.log(0.0001)
 
@@ -129,14 +129,14 @@ class spell_correction():
                                 line[j - 1] + " " + candi
                         )  # 考虑前一个单词,出现like playing的概率
                         prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, forward_word, line[j - 1]
+                            self.bigram_count, self.term_count, self.V, forward_word, line[j - 1]
                         )
                     if j + 1 < len(line):
                         backward_word = (
                                 candi + " " + line[j + 1]
                         )  # 考虑后一个单词，出现playing football的概率
                         prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, backward_word, candi
+                            self.bigram_count, self.term_count, self.V, backward_word, candi
                         )
                     probs.append(prob)
 
