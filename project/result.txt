@@ -51,7 +51,7 @@
 51	The ban, imposed a week ago over a pay claim, had prevented the movement in or out of port of nearly 20 vessels, they said .
 52	The pay dispute went before a hearing of the Arbitration Commission today .
 53	Meanwhile, disruption began today to cargo handling in the ports of Sydney, Newcastle and Port Kembla, they said .
-54	The industrial action at the NSW ports is part of the week of action called by the NSW Trades and Labour Council to protest changes to the state's workers' compensation laws .
+54	The industrial action at the NSW ports is part of the week of action called by the NSW Trades and Labour Council to protest changes to the state's workers ' compensation laws .
 55	The shipping sources said the various port onions appear to be taking it in turn to work for a short time at the start of each shift and then to walk off .
 56	Cargo handling in the ports has been disrupted, with container movements most affected, but has not stopped altogether, they said .
 57	They said they could not say how long the disruption will go on and what effect it will have on shipping movements .
@@ -123,11 +123,11 @@
 123	Dealers said the Bundesbank is keen to prevent too much liquidity accruing in the market, as that would blunt the effectiveness of the security repurchase agreement, its main open-market instrument for steering market interest rates .
 124	Two further pacts are likely this mouth over the next two weeks .
 125	The Bundesbank is currently steering call money between 3.6 and 3.8 pct, although short-term fluctuations outside that range are possible, dealers said .
-126	Atlas, the Philippines' biggest copper producer, said it had been hit by depressed world copper prices .
+126	Atlas, the Philippines ' biggest copper producer, said it had been hit by depressed world copper prices .
 127	It reported a net loss of 976.38 mln pesos in the year ending December 1986, compared with a net loss of 1.53 billion in 1985 .
 128	The company said it had been able to cut its losses because its scaled-down copper operations in the central island of Cebu started in the second half of 1986 .
 129	Atlas said negotiations were continuing on the acquisition by Bond of the company's existing bank loans and their restructuring into a gold loan .
-130	A memorandum of understanding signed by the two sides in October last year said Bond would acquire Atlas' total loans of 275 mln dlrs, to be repaid by the mining company in gold .
+130	A memorandum of understanding signed by the two sides in October last year said Bond would acquire Atlas ' total loans of 275 mln dlrs, to be repaid by the mining company in gold .
 131	Atlas said the two sides were also discussing equity infusion into Atlas and the creation of a development fund for further exploration and development of the company's gold properties in the central province of Masbate .
 132	Wilson Banks, general manager of ltBond Corp International Ltd in Hong Kong, told Reuters the Atlas statement on the negotiations was reasonably accurate .
 133	Banks said Bond Corp was seriously considering several investments in the Philippines but did not give details .
@@ -162,7 +162,7 @@
 162	Amatil, in which B.A.T .
 163	Industries Plc ltBTI.L holds a 41 pct stake, said it does not expect to maintain its latest annual dividend rate of 29 cents a share on the enlarged capital .
 164	Among the main factors affecting liquidity, bills maturing in official hands and the take-up of treasury bills will drain some 505 mln stg, while bills for repurchase by the market will remove around 194 mln .
-165	In addition, a rise in note circulation and bankers' balances below target will each drain around 110 mln stg .
+165	In addition, a rise in note circulation and bankers ' balances below target will each drain around 110 mln stg .
 166	Partly offsetting these outflows, exchequer transactions will add some 690 mln stg to the system today .
 167	He told a press conference the government planned to increase investment, speed up the opening of the local market to foreign imports and gradually adjust its currency to hold the surplus at a proper level .
 168	But he said the government would not allow the won to appreciate too much in a short period of time .
@@ -211,7 +211,7 @@
 211	It said in a statement that the two factors led to a squeeze on refining margins and an 18.24 pct fall in sales and services income despite an unchanged level of activity .
 212	Vieille Montagne, which is actively pursuing a restructuring program, reported a 198 mln franc net loss, after 187 mln francs in provisions for the closure of an electrolysis plant, compared with a 250 mln franc net profit in 1985 .
 213	STAND TAKEN European Community EC members of the International Tin Council, except Britain, have said they are prepared to back an extension of the International Tin Agreement, an EC spokesman said .
-214	He said at a meeting of EC states' representatives here yesterday, Britain undertook to communicate its own decision to its partners today .
+214	He said at a meeting of EC states ' representatives here yesterday, Britain undertook to communicate its own decision to its partners today .
 215	It said it was not ready yesterday to take a stand but did not say why .
 216	He added nine other EC states backed an extension .
 217	Spain and Portugal, which are not members of the International Tin Council, raised no objections to a common EC stance in favour .
@@ -239,7 +239,7 @@
 239	Official figures on the latest inflow of investment capital are not available, but brokers said they received almost daily inquiries from Japan and the United States .
 240	These people have got trillions of dollars sloshing about and they do n't know what to do with it .
 241	Some of that is ending up here with the attraction of high interest rates and reasonable currency stability, National Australia Bank Ltd economist Brian Hamley said .
-242	There is a'flight to qualify', Hamley said .
+242	There is a 'flight to qualify', Hamley said .
 243	Australia may not be in the best economic position, but there are n't too many other countries where you'd want to put your money .
 244	The stronger Australian dollar was also attracting investors taking advantage of an appreciating currency against the volatility of the U.S. Unit, analysts said .
 245	We're looking a more favoured market than perhaps the U.S. Where some people would be concerned about the value of the U.S. Dollar, Lloyds Bank NZA Ltd chief economist Will Buttrose said .
@@ -272,7 +272,7 @@
 272	There was some 4.4 billion dinars about 15.7 billion dlrs in outstanding bank credit at the end of 1986, of which one-quarter to one-third was estimated by bankers to rank as bad or doubtful debt .
 273	But the government has repeatedly said it will not allow any banks to go under .
 274	The new debt settlement scheme entails a rescheduling of problem credit over 10 to 15 years, depending on whether debtors have regular cash flows or not .
-275	Banks' shareholders and depositors will have their rights guaranteed by the government -- an edict of vital significance in a country of only 1.7 mln people where the financial sector is the biggest after oil .
+275	Banks ' shareholders and depositors will have their rights guaranteed by the government -- an edict of vital significance in a country of only 1.7 mln people where the financial sector is the biggest after oil .
 276	Kuwait is better placed than any other OPEC country to ride out the oil glut, bankers and economists say .
 277	Kuwait has an OPEC quota of 948,000 barrels per day bpd compared with production capacity of 4.0 mln bpd mentioned last year by Oil Minister Sheikh Ali al-Khalifa al-Sabah .
 278	But strategic diversification into downstream operations in Europe several years ago and a hefty refining investment at home gives it guaranteed markets abroad and enables it to sell over one-half of its output as high-grade refined oil products .
@@ -328,7 +328,7 @@
 328	Jardine Matheson decided to withdraw its issue because of a joint announcement earlier today by Ronald Li, chairman of the Stock Exchange of Hong Kong, and Securities Commissioner Ray Astin, that the listings of new B shares would be barred .
 329	The official announcement said this will include the proposal by Jardine Matheson .
 330	But the Jardine statement quoted chairman Simon Keswick as saying We continue to believe that the issuing of B shares would benefit shareholders, and regret that they will not be given the opportunity to vote on the matter at this stage .
-331	Keswick said the B share issue will benefit Jardine Matheson's shareholders by giving the firm flexibility to issue ordinary shares for expansion in future without diluting existing shareholders' voting rights .
+331	Keswick said the B share issue will benefit Jardine Matheson's shareholders by giving the firm flexibility to issue ordinary shares for expansion in future without diluting existing shareholders ' voting rights .
 332	However, he added We certainly welcome the Secretary for Monetary Affairs David Nendick's referral of this very important matter to the Standing Committee on Company Law Reform and are hopeful that the process will lead to the development of general principles which can be embraced by all constituents of the Hong Kong market .
 333	Michael Armacost, Under Secretary of State for Political Affairs, was asked at a press conference whether Japan's moves to boost its domestic economy and open its markets could persuade the U.S. Not to impose tariffs on Japanese imports said, and replied It is probably too early for the figures to demonstrate that the situation has turned around and to permit the result you have described .
 334	Armacost said the U.S. Hopes Japan will take steps to lift its domestic economy and reduce dependence on exports, remove barriers to imports and settle outstanding trade issues .
@@ -350,7 +350,7 @@
 350	De los Angeles said the share purchase would also violate an SMC agreement with its creditors to maintain a 2.2-to-1 debt to equity ratio .
 351	He quoted SMC's chief financial director Ramon del Rosario as telling the board that the transaction would boost the ratio to 2.5-to-1 .
 352	In petitioning the SEC, de los Angeles amended an earlier suit two weeks ago in which he charged SMC Chairman Andres Soriano III and nine other directors of violating their duties .
-353	De los Angeles' earlier complaint related to SMC assuming last December a 26.5 mln dlr loan contracted by SMC's Hong Kong subsidiary ltNeptunia Corp for a down payment on the shares .
+353	De los Angeles ' earlier complaint related to SMC assuming last December a 26.5 mln dlr loan contracted by SMC's Hong Kong subsidiary ltNeptunia Corp for a down payment on the shares .
 354	The loan assumption was again ratified by last week's board meeting .
 355	An arbitration panel set up by President Corazon Aquino to resolve the ownership issue is expected to submit its report by April 15 .
 356	The amended suit filed by Eduardo de los Angeles is part of a continuing attempt by certain elements, in complete disregard of the facts and with questionable motives, to delay an early disposition of the sequestered shares, San Miguel Corp said in a statement .
@@ -366,7 +366,7 @@
 366	The shares grew to 38.1 mln after a 15 pct stock dividend announced last June .
 367	We have no objection to Soriano buying the B shares, Diaz told Reuters .
 368	But everything is on hold now .
-369	The SMC spokesman said he did not know if the controversy would be resolved before the company's annual stockholders' meeting, scheduled for May 14 .
+369	The SMC spokesman said he did not know if the controversy would be resolved before the company's annual stockholders ' meeting, scheduled for May 14 .
 370	San Miguel Corp reported sales revenue of 12.2 billion pesos in 1986, 11 pct above its 10.9 billion peso sales in 1985 .
 371	It said unaudited net profit was in the neighbourhood of 700 mln pesos, an increase of about 50 pct over 1985 .
 372	As previously reported, the region has been undergoing a severe dry spell, partly relieved by scattered rainfall, since December, following the virtual failure of the summer wet season .
@@ -434,9 +434,9 @@
 434	The ban, imposed a week ago over a pay claim, had prevented the movement in or out of port of nearly 20 vessels, they said .
 435	The pay dispute went before a hearing of the Arbitration Commission today .
 436	Meanwhile, disruption bean today to cargo handling in the ports of Sydney, Newcastle and Port Kembla, they said .
-437	The industrial action at the NSW ports is part of the week of action called by the NSW Trades and Labour Council to protest changes to the state's workers' compensation laws .
+437	The industrial action at the NSW ports is part of the week of action called by the NSW Trades and Labour Council to protest changes to the state's workers ' compensation laws .
 438	Lammers, Queen's Commissioner for the province of Flevoland, will not act as a mediator but will draw up an agenda and procedures for meetings between the employers and unions on a work-practice agreement and proposed redundancies .
-439	Two months of strikes in the sector began on January 19 in protest at employers' proposals for 350 redundancies from the 4,000-strong workforce this year .
+439	Two months of strikes in the sector began on January 19 in protest at employers ' proposals for 350 redundancies from the 4,000-strong workforce this year .
 440	The strikes were called off by the main port union FNV on March 13 following an Amsterdam court's interim injunction against the redundancies on procedural grounds .
 441	The court is due to make a final ruling on May 7 but Zeebregts said he expected the judgment to go against the employers and they were therefore very likely to restart the complicated legal redundancy procedures in the near future .
 442	Meanwhile, the dispute over a new work-practice agreement in the port's grain sector continued, with 30 maintenance workers on strike, although loading was not affected, a spokesman for Graan Elevator Mij, the largest employer in the sector, said .
@@ -447,7 +447,7 @@
 447	Today the company reported first quarter earnings of 20.6 mln dlrs on sales of 238.0 mln dlrs, up from earnings of 16.1 mln dlrs on sales of 188.8 mln dlrs .
 448	Net includes pretax loan loss provisions of 90,000 dlrs vs 56,250 dlrs and gain on sale of securities of 113,432 dlrs vs 88,946 dlrs .
 449	In March 1986, the figure stood at 2.4 pct .
-450	Rod Canion, president and chief executive officer of Compaq, said he expects sales of over 200 mln dlrs for the period ending March 31, above analysts' estimates of 165-185 mln dlrs .
+450	Rod Canion, president and chief executive officer of Compaq, said he expects sales of over 200 mln dlrs for the period ending March 31, above analysts ' estimates of 165-185 mln dlrs .
 451	He added that earnings per share would exceed analysts estimates of as high as 42 cts a share .
 452	Compaq reported earnings of 8.3 mln dlrs, or 30 cts a share, and sales of 144 mln dlrs for the first quarter 1986 .
 453	The company said demand for its DESKPRO 386, PORTABLE III and the new COMPAQ DESKPRO 286 will contribute to the sales increase .
@@ -848,7 +848,7 @@
 848	Committee sources said De Zeeuw expressed concern over protectionism and high farm price supports .
 849	House lawmakers noted that in 1985 the United States took steps to reduce loan rates, committee staff said .
 850	Members told him De Zeeuw that we lowered our U.S. loan rates and ca n't eliminate subsidies unilaterally, one source said .
-851	De Zeeuw was told of the U.S. lawmakers' frustration with Japan's restrictive rice import policy, and members defended the U.S. dairy policy, which aims to cut surplus production by subsidizing producers to trim herds, sources said .
+851	De Zeeuw was told of the U.S. lawmakers ' frustration with Japan's restrictive rice import policy, and members defended the U.S. dairy policy, which aims to cut surplus production by subsidizing producers to trim herds, sources said .
 852	Later today De Zeeuw will meet the Senate Agriculture members and Undersecretary of State Affairs Allen Wallis .
 853	Tomorrow, De Zeeuw is to meet the House Ways and Means Trade Subcommittee and the Senate Finance Committee, before visiting Agriculture Secretary Richard Lyng .
 854	De Zeeuw goes to Canada later this week .
