@@ -95,8 +95,7 @@ class spell_correction():
         # 识别句尾标点符号并分开
         line = re.sub(r"([.?!]\s*$)", r" \1 ", line)
 
-        items = line.split("\t")
-        line = items[2].split()
+        line = line.split()
         corrected_line = line
         j = 0
         # 遍历句子单词
