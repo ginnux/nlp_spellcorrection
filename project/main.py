@@ -87,9 +87,35 @@ print(CG.generate_candidates("HKES"))
 # 设置最大编辑距离
 max_distance = 1
 
+
 # %% [markdown]
 # ### 未实现的用例
 # 241 246
+def generate_candidates_probs(candidates, channel_prob):
+    # 对于每一个candidate, 计算它的score
+    # score = p(correct)*p(mistake|correct)
+    #       = log p(correct) + log p(mistake|correct)
+    # 返回score最大的candidate
+    probs = []
+    for candi in candidates:
+        prob = 0
+        # 计算channel probability
+        if candi in channel_prob and word in channel_prob[candi]:
+            prob += np.log(channel_prob[candi][word])
+        else:
+            prob += np.log(0.0001)
+
+        # 计算语言模型的概率
+        # 以s=I like playing football.为例line=['I','like','playing','football']
+        # word为playing时
+        if j > 0:
+            forward_word = line[j - 1] + " " + candi  # 考虑前一个单词,出现like playing的概率
+            prob += calculate_smoothed_probability(bigram_count, term_count, V, forward_word, line[j - 1])
+        if j + 1 < len(line):
+            backward_word = candi + " " + line[j + 1]  # 考虑后一个单词，出现playing football的概率
+            prob += calculate_smoothed_probability(bigram_count, term_count, V, backward_word, candi)
+        probs.append(prob)
+    return probs
 
 
 # %%
@@ -127,10 +153,8 @@ with open(file_path, "r") as file:
         line = re.sub(r"([n])(['])([t])", r" \1\2\3 ", line)
         # 若单引号是前是n，后面不是t，则就是一般情况，分开n和单引号
         line = re.sub(r"([n])(['])([^t])", r"\1 \2\3", line)
-
         # 识别句尾标点符号并分开
         line = re.sub(r"([.?!]\s*$)", r" \1 ", line)
-
         items = line.split("\t")
         line = items[2].split()
         corrected_line = line
@@ -149,38 +173,8 @@ with open(file_path, "r") as file:
                 not_word = 1
                 candidates = CG.generate_candidates(word, max_distance=max_distance)
                 candidates = list(candidates)
-                probs = []
 
-                # 对于每一个candidate, 计算它的score
-                # score = p(correct)*p(mistake|correct)
-                #       = log p(correct) + log p(mistake|correct)
-                # 返回score最大的candidate
-                for candi in candidates:
-                    prob = 0
-                    # 计算channel probability
-                    if candi in channel_prob and word in channel_prob[candi]:
-                        prob += np.log(channel_prob[candi][word])
-                    else:
-                        prob += np.log(0.0001)
-
-                    # 计算语言模型的概率
-                    # 以s=I like playing football.为例line=['I','like','playing','football']
-                    # word为playing时
-                    if j > 0:
-                        forward_word = (
-                                line[j - 1] + " " + candi
-                        )  # 考虑前一个单词,出现like playing的概率
-                        prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, forward_word, line[j - 1]
-                        )
-                    if j + 1 < len(line):
-                        backward_word = (
-                                candi + " " + line[j + 1]
-                        )  # 考虑后一个单词，出现playing football的概率
-                        prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, backward_word, candi
-                        )
-                    probs.append(prob)
+                probs = generate_candidates_probs(candidates, channel_prob)
 
                 if probs:
                     max_idx = probs.index(max(probs))
@@ -200,38 +194,8 @@ with open(file_path, "r") as file:
                 # 获得编辑距离小于2的候选列表
                 candidates = CG.generate_candidates(word, max_distance=max_distance)
                 candidates = list(candidates)
-                probs = []
 
-                # 对于每一个candidate, 计算它的score
-                # score = p(correct)*p(mistake|correct)
-                #       = log p(correct) + log p(mistake|correct)
-                # 返回score最大的candidate
-                for candi in candidates:
-                    prob = 0
-                    # 计算channel probability
-                    if candi in channel_prob and word in channel_prob[candi]:
-                        prob += np.log(channel_prob[candi][word])
-                    else:
-                        prob += np.log(0.0001)
-
-                    # 计算语言模型的概率
-                    # 以s=I like playing football.为例line=['I','like','playing','football']
-                    # word为playing时
-                    if k > 0:
-                        forward_word = (
-                                line[k - 1] + " " + candi
-                        )  # 考虑前一个单词,出现like playing的概率
-                        prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, forward_word, line[k - 1]
-                        )
-                    if k + 1 < len(line):
-                        backward_word = (
-                                candi + " " + line[k + 1]
-                        )  # 考虑后一个单词，出现playing football的概率
-                        prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, backward_word, candi
-                        )
-                    probs.append(prob)
+                probs = generate_candidates_probs(candidates, channel_prob)
                 # 这里选取概率最大的候选词，加入到word_candidates，注意对长度小于等于3的词默认正确
                 # word_candidates默认与line一一对应
                 if probs:
@@ -241,19 +205,19 @@ with open(file_path, "r") as file:
                     else:
                         word_candidates.append(candidates[max_idx])
 
-            l=0
+            l = 0
             # sentence_probs用于存储ward被候选词替换后这个句子的概率，用bigram模型计算，顺序依然是一一对应，比如第三个概率是第三个词被替换
             sentence_probs = []
             for word_candidate in word_candidates:
                 sentence_prob = 0
-                sentence = line[:l] + [word_candidate]+line[l+1:] # 替换word
-                for m in range(len(sentence)-1):  # 计算概率
+                sentence = line[:l] + [word_candidate] + line[l + 1:]  # 替换word
+                for m in range(len(sentence) - 1):  # 计算概率
                     sentence_word = sentence[m]
-                    sentence_word_next = sentence[m+1]
+                    sentence_word_next = sentence[m + 1]
                     sentence_prob += (calculate_smoothed_probability(
-                            bigram_count, term_count, V, (sentence_word,sentence_word_next), sentence_word))
+                        bigram_count, term_count, V, (sentence_word, sentence_word_next), sentence_word))
                 sentence_probs.append(sentence_prob)
-                l = l+1
+                l = l + 1
             # 应该是越合理的、出现越频繁的句子概率越高，但经过实验和观察反而是取概率最小的能改对  ？？？
             min_sentence_idx = sentence_probs.index(min(sentence_probs))
             corrected_line[min_sentence_idx] = word_candidates[min_sentence_idx]
