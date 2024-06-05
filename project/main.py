@@ -93,6 +93,9 @@ max_distance = 1
 
 
 # %%
+from itertools import product
+
+
 def count_lines(filename):
     with open(filename, "r") as f:
         return sum(1 for line in f)
@@ -132,9 +135,66 @@ with open(file_path, "r") as file:
         line = items[2].split()
         corrected_line = line
         j = 0
+        # 非词错误标志
+        not_word = 0
+
         # 遍历句子单词
         for word in line:
             if word not in vocab:
+                # 需要替换word成正确的单词
+                # Step1: 生成所有的(valid)候选集合
+                # 获得编辑距离小于2的候选列表
+
+                # 存在非词错误
+                not_word = 1
+                candidates = CG.generate_candidates(word, max_distance=max_distance)
+                candidates = list(candidates)
+                probs = []
+
+                # 对于每一个candidate, 计算它的score
+                # score = p(correct)*p(mistake|correct)
+                #       = log p(correct) + log p(mistake|correct)
+                # 返回score最大的candidate
+                for candi in candidates:
+                    prob = 0
+                    # 计算channel probability
+                    if candi in channel_prob and word in channel_prob[candi]:
+                        prob += np.log(channel_prob[candi][word])
+                    else:
+                        prob += np.log(0.0001)
+
+                    # 计算语言模型的概率
+                    # 以s=I like playing football.为例line=['I','like','playing','football']
+                    # word为playing时
+                    if j > 0:
+                        forward_word = (
+                                line[j - 1] + " " + candi
+                        )  # 考虑前一个单词,出现like playing的概率
+                        prob += calculate_smoothed_probability(
+                            bigram_count, term_count, V, forward_word, line[j - 1]
+                        )
+                    if j + 1 < len(line):
+                        backward_word = (
+                                candi + " " + line[j + 1]
+                        )  # 考虑后一个单词，出现playing football的概率
+                        prob += calculate_smoothed_probability(
+                            bigram_count, term_count, V, backward_word, candi
+                        )
+                    probs.append(prob)
+
+                if probs:
+                    max_idx = probs.index(max(probs))
+                    if len(word) == 1:
+                        corrected_line[j] = word  # 不替换单个字母
+                    else:
+                        corrected_line[j] = candidates[max_idx]
+            j += 1
+
+        # 存在实词错误,相当于判断无非词错误后来看实词错误
+        if not_word != 1:
+            # 遍历句子单词，选出每个单词在当前句中最合理的，prob最大的候选词，每个词只对应一个候选词，选候选词过程与前面一致
+            word_candidates = []
+            for k, word in enumerate(line):
                 # 需要替换word成正确的单词
                 # Step1: 生成所有的(valid)候选集合
                 # 获得编辑距离小于2的候选列表
@@ -157,29 +217,46 @@ with open(file_path, "r") as file:
                     # 计算语言模型的概率
                     # 以s=I like playing football.为例line=['I','like','playing','football']
                     # word为playing时
-                    if j > 0:
+                    if k > 0:
                         forward_word = (
-                            line[j - 1] + " " + candi
+                                line[k - 1] + " " + candi
                         )  # 考虑前一个单词,出现like playing的概率
                         prob += calculate_smoothed_probability(
-                            bigram_count, term_count, V, forward_word, line[j - 1]
+                            bigram_count, term_count, V, forward_word, line[k - 1]
                         )
-                    if j + 1 < len(line):
+                    if k + 1 < len(line):
                         backward_word = (
-                            candi + " " + line[j + 1]
+                                candi + " " + line[k + 1]
                         )  # 考虑后一个单词，出现playing football的概率
                         prob += calculate_smoothed_probability(
                             bigram_count, term_count, V, backward_word, candi
                         )
                     probs.append(prob)
-
+                # 这里选取概率最大的候选词，加入到word_candidates，注意对长度小于等于3的词默认正确
+                # word_candidates默认与line一一对应
                 if probs:
                     max_idx = probs.index(max(probs))
-                    if len(word) == 1:
-                        corrected_line[j] = word  # 不替换单个字母
+                    if len(word) <= 3:
+                        word_candidates.append(word)  # 不替换单个字母
                     else:
-                        corrected_line[j] = candidates[max_idx]
-            j += 1
+                        word_candidates.append(candidates[max_idx])
+
+            l=0
+            # sentence_probs用于存储ward被候选词替换后这个句子的概率，用bigram模型计算，顺序依然是一一对应，比如第三个概率是第三个词被替换
+            sentence_probs = []
+            for word_candidate in word_candidates:
+                sentence_prob = 0
+                sentence = line[:l] + [word_candidate]+line[l+1:] # 替换word
+                for m in range(len(sentence)-1):  # 计算概率
+                    sentence_word = sentence[m]
+                    sentence_word_next = sentence[m+1]
+                    sentence_prob += (calculate_smoothed_probability(
+                            bigram_count, term_count, V, (sentence_word,sentence_word_next), sentence_word))
+                sentence_probs.append(sentence_prob)
+                l = l+1
+            # 应该是越合理的、出现越频繁的句子概率越高，但经过实验和观察反而是取概率最小的能改对  ？？？
+            min_sentence_idx = sentence_probs.index(min(sentence_probs))
+            corrected_line[min_sentence_idx] = word_candidates[min_sentence_idx]
 
         # 因为对所有词间加入了标点符号，要对句子标点符号修正
         corrected_sentence = " ".join(corrected_line)
@@ -213,9 +290,9 @@ with open(file_path, "r") as file:
         corrected_sentence = re.sub(r"([.?!])\s*$", r"\1", corrected_sentence)
         # 补全
         if (
-            corrected_sentence[-1] != "."
-            and corrected_sentence[-1] != "?"
-            and corrected_sentence[-1] != "!"
+                corrected_sentence[-1] != "."
+                and corrected_sentence[-1] != "?"
+                and corrected_sentence[-1] != "!"
         ):
             corrected_sentence += "."
 
