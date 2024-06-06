@@ -62,7 +62,8 @@ for line in open("count_1edit.txt"):
                 line = line.replace(space, " ")
 
     # 正常情况
-    correct, mistake = line.split("|")
+    # 原先是correct，mistake = line。split("|")，对比ppt后感觉是写反了
+    mistake, correct = line.split("|")
 
     count = int(count)
     # Step2:计算错误次数
@@ -91,19 +92,24 @@ max_distance = 1
 # %% [markdown]
 # ### 未实现的用例
 # 241 246
-def generate_candidates_probs(candidates, channel_prob):
+def generate_candidates_probs(candidates, channel_prob, line, j):
     # 对于每一个candidate, 计算它的score
     # score = p(correct)*p(mistake|correct)
     #       = log p(correct) + log p(mistake|correct)
     # 返回score最大的candidate
+    # 已修改，原先没有传入line和j
     probs = []
     for candi in candidates:
         prob = 0
         # 计算channel probability
-        if candi in channel_prob and word in channel_prob[candi]:
-            prob += np.log(channel_prob[candi][word])
-        else:
-            prob += np.log(0.0001)
+        # get_key_value_pairs获取candi与word的字符区别，以便在channel_prob中寻找
+        pair = get_key_value_pairs(candi, word)
+        for correct_char, incorrect_char in pair.items():
+            if correct_char in channel_prob and incorrect_char in channel_prob[correct_char]:
+                prob += np.log(channel_prob[correct_char][incorrect_char])
+                prob -= np.log(0.0001)
+        prob += np.log(0.0001)
+
 
         # 计算语言模型的概率
         # 以s=I like playing football.为例line=['I','like','playing','football']
@@ -118,10 +124,56 @@ def generate_candidates_probs(candidates, channel_prob):
     return probs
 
 
+def get_key_value_pairs(correct_word, incorrect_word):
+    """
+    获取正确单词和错误单词之间修改字符的键值对，如remains与remain，输出为dict:{‘s':’ ‘}。
+    """
+    key_value_pairs = {}
+
+    # 与寻找候选词类似挨个遍历查找两个单词间具体不同
+
+    # 假设使用26个字符
+    letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    # 将单词在不同的位置拆分成2个字符串，然后分别进行insert，delete你replace操作,
+    # 拆分形式为：[('', 'apple'), ('a', 'pple'), ('ap', 'ple'), ('app', 'le'), ('appl', 'e'), ('apple', '')]
+    splits = [(incorrect_word[:i], incorrect_word[i:]) for i in range(len(incorrect_word) + 1)]
+
+    # insert操作
+    for L, R in splits:
+        for c in letters:
+            insert = L + c + R
+            if correct_word == insert:
+                key_value_pairs[c] = ' '
+    # delete
+    # 判断分割后的字符串R是否为空，不为空，删除R的第一个字符即R[1:]
+    for L, R in splits:
+        if R:
+            delete = L + R[1:]
+            if correct_word == delete:
+                key_value_pairs[' '] = R[0]
+
+    # transposes
+    for L, R in splits:
+        if len(R) > 1:
+            transpose = L + R[1] + R[0] + R[2:]
+            if correct_word == transpose and transpose != incorrect_word:
+                key_value_pairs[R[1] + R[0]] = R[0] + R[1]
+    # replace
+    for L, R in splits:
+        if R:
+            for c in letters:
+                replace = L + c + R[1:]  # 替换R的第一个字符,即c+R[1:]
+                if correct_word == replace and replace != incorrect_word:
+                    key_value_pairs[c] = R[0]
+    # exchange
+    for i in range(len(incorrect_word)):
+        for j in range(i + 1, len(incorrect_word)):
+            exchange = incorrect_word[:i] + incorrect_word[j] + incorrect_word[i + 1: j] + incorrect_word[i] + incorrect_word[j + 1:]
+            if correct_word == exchange and exchange != incorrect_word:
+                key_value_pairs[incorrect_word[j] + incorrect_word[i + 1: j] + incorrect_word[i]] = incorrect_word[i:j]
+
+    return key_value_pairs
 # %%
-from itertools import product
-
-
 def count_lines(filename):
     with open(filename, "r") as f:
         return sum(1 for line in f)
@@ -157,13 +209,16 @@ with open(file_path, "r") as file:
         line = re.sub(r"([.?!]\s*$)", r" \1 ", line)
         items = line.split("\t")
         line = items[2].split()
+        # 开头增加符号<s>
+        line = ['<s>'] + line
         corrected_line = line
-        j = 0
         # 非词错误标志
         not_word = 0
 
         # 遍历句子单词
-        for word in line:
+        for j, word in enumerate(line):
+            if word == '<s>' or word == '</s>':
+                continue
             if word not in vocab:
                 # 需要替换word成正确的单词
                 # Step1: 生成所有的(valid)候选集合
@@ -174,7 +229,7 @@ with open(file_path, "r") as file:
                 candidates = CG.generate_candidates(word, max_distance=max_distance)
                 candidates = list(candidates)
 
-                probs = generate_candidates_probs(candidates, channel_prob)
+                probs = generate_candidates_probs(candidates, channel_prob, line, j)
 
                 if probs:
                     max_idx = probs.index(max(probs))
@@ -182,45 +237,55 @@ with open(file_path, "r") as file:
                         corrected_line[j] = word  # 不替换单个字母
                     else:
                         corrected_line[j] = candidates[max_idx]
-            j += 1
+        corrected_line = corrected_line[1:]
 
         # 存在实词错误,相当于判断无非词错误后来看实词错误
         if not_word != 1:
-            # 遍历句子单词，选出每个单词在当前句中最合理的，prob最大的候选词，每个词只对应一个候选词，选候选词过程与前面一致
+            # 遍历句子单词的候选词，选出候选词在当前句中最合理的
             word_candidates = []
+            best_sentence = []
+            best_prob = []
             for k, word in enumerate(line):
+                # 跳过开头
+                if word == '<s>' or word == '</s>':
+                    continue
                 # 需要替换word成正确的单词
                 # Step1: 生成所有的(valid)候选集合
                 # 获得编辑距离小于2的候选列表
+                best_prob_for_word = []
+                best_sentence_for_word = []
                 candidates = CG.generate_candidates(word, max_distance=max_distance)
                 candidates = list(candidates)
 
-                probs = generate_candidates_probs(candidates, channel_prob)
-                # 这里选取概率最大的候选词，加入到word_candidates，注意对长度小于等于3的词默认正确
-                # word_candidates默认与line一一对应
-                if probs:
-                    max_idx = probs.index(max(probs))
-                    if len(word) <= 3:
-                        word_candidates.append(word)  # 不替换单个字母
-                    else:
-                        word_candidates.append(candidates[max_idx])
-
-            l = 0
-            # sentence_probs用于存储ward被候选词替换后这个句子的概率，用bigram模型计算，顺序依然是一一对应，比如第三个概率是第三个词被替换
-            sentence_probs = []
-            for word_candidate in word_candidates:
-                sentence_prob = 0
-                sentence = line[:l] + [word_candidate] + line[l + 1:]  # 替换word
-                for m in range(len(sentence) - 1):  # 计算概率
-                    sentence_word = sentence[m]
-                    sentence_word_next = sentence[m + 1]
-                    sentence_prob += (calculate_smoothed_probability(
-                        bigram_count, term_count, V, (sentence_word, sentence_word_next), sentence_word))
-                sentence_probs.append(sentence_prob)
-                l = l + 1
-            # 应该是越合理的、出现越频繁的句子概率越高，但经过实验和观察反而是取概率最小的能改对  ？？？
-            min_sentence_idx = sentence_probs.index(min(sentence_probs))
-            corrected_line[min_sentence_idx] = word_candidates[min_sentence_idx]
+                # 对长度小于等于3的词候选词默认自身
+                if len(word) <= 3:
+                    word_candidates = [word]  # 不替换单个字母
+                else:
+                    word_candidates = candidates
+                # 开始遍历候选词，存储对应修改过的句子，比较prob
+                for word_candidate in word_candidates:
+                    sentence_prob = 0
+                    sentence = line[:k] + [word_candidate] + line[k + 1:]  # 替换word
+                    for m in range(len(sentence) - 1):  # 采用链式法则计算概率，同时还有一项将当前词错写成候选词的概率
+                        sentence_word = sentence[m]
+                        sentence_word_next = sentence[m + 1]
+                        sentence_prob += (calculate_smoothed_probability(
+                            bigram_count, term_count, V, (sentence_word, sentence_word_next), sentence_word))
+                    # 获取候选词与单词的不同，返回一个字典，然后扔进channel_prob里查询
+                    pairs = get_key_value_pairs(word_candidate, word)
+                    for correct_char, incorrect_char in pairs.items():
+                        if correct_char in channel_prob and incorrect_char in channel_prob[correct_char]:
+                            sentence_prob += np.log(channel_prob[correct_char][incorrect_char])
+                            sentence_prob -= np.log(0.0001)
+                    sentence_prob += np.log(0.0001)
+                    # 保存结果
+                    best_sentence_for_word.append(sentence)
+                    best_prob_for_word.append(sentence_prob)
+                # 保存单个单词所有候选词概率最小的结果，然后看下一个单词
+                best_sentence.append(best_sentence_for_word[best_prob_for_word.index(min(best_prob_for_word))])
+                best_prob.append(min(best_prob_for_word))
+            # 去除开头符号<s>
+            corrected_line = best_sentence[best_prob.index(min(best_prob))][1:]
 
         # 因为对所有词间加入了标点符号，要对句子标点符号修正
         corrected_sentence = " ".join(corrected_line)
