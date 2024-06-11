@@ -1,11 +1,10 @@
 import nltk
 import re
 import numpy as np
-from project.ngram import generate_ngram_models
-from project.ngram import calculate_smoothed_probability
+from ngram import generate_ngram_models
+from ngram import calculate_smoothed_probability
 from nltk.corpus import reuters
-from tqdm import tqdm
-from project.edit_distance import CandidatesGenerator
+from edit_distance import CandidatesGenerator
 
 
 def generate_noisy_channel_model():
