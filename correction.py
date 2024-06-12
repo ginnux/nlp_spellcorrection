@@ -1,11 +1,17 @@
-import nltk
+from nltk import download as nltk_download
 import re
-import numpy as np
+from numpy import log
 from ngram import generate_ngram_models
 from ngram import calculate_smoothed_probability
 from nltk.corpus import reuters
-from tqdm import tqdm
 from edit_distance import CandidatesGenerator
+
+# 获取目录路径对象
+import sys, os
+
+work_path = os.path.dirname(sys.argv[0])
+vocab_path = os.path.join(work_path, "vocab.txt")
+count_path = os.path.join(work_path, "count_1edit.txt")
 
 
 def generate_noisy_channel_model():
@@ -14,7 +20,7 @@ def generate_noisy_channel_model():
 
     i = 0
     # 解析错误数据并计算总错误次数
-    for line in open("count_1edit.txt"):
+    for line in open(count_path, "r"):
         i += 1
         # Step1:解析数据
         # 正则表达式找到错误次数
@@ -135,9 +141,9 @@ def generate_candidates_probs(
                 correct_char in channel_prob
                 and incorrect_char in channel_prob[correct_char]
             ):
-                prob += np.log(channel_prob[correct_char][incorrect_char])
-                prob -= np.log(0.0001)
-        prob += np.log(0.0001)
+                prob += log(channel_prob[correct_char][incorrect_char])
+                prob -= log(0.0001)
+        prob += log(0.0001)
 
         # 计算语言模型的概率
         # 以s=I like playing football.为例line=['I','like','playing','football']
@@ -167,7 +173,7 @@ def generate_candidates_probs(
 class spell_correction:
     def __init__(self):
         try:
-            self.vocab = {line.rstrip() for line in open("vocab.txt")}
+            self.vocab = {line.rstrip() for line in open(vocab_path, "r")}
         except FileNotFoundError:
             print("No vocab file found.")
             exit(1)
@@ -178,8 +184,8 @@ class spell_correction:
             print(
                 "first time running, download reuters corpus, it will take some time."
             )
-            nltk.download("reuters")
-            nltk.download("punkt")
+            nltk_download("reuters")
+            nltk_download("punkt")
             categories = reuters.categories()  # 路透社语料库的类别
             corpus = reuters.sents(categories=categories)  # sents()指定分类中的句子
 
@@ -305,11 +311,11 @@ class spell_correction:
                             correct_char in self.channel_prob
                             and incorrect_char in self.channel_prob[correct_char]
                         ):
-                            sentence_prob += np.log(
+                            sentence_prob += log(
                                 self.channel_prob[correct_char][incorrect_char]
                             )
-                            sentence_prob -= np.log(0.0001)
-                    sentence_prob += np.log(0.0001)
+                            sentence_prob -= log(0.0001)
+                    sentence_prob += log(0.0001)
                     # 保存结果
                     best_sentence_for_word.append(sentence)
                     best_prob_for_word.append(sentence_prob)
