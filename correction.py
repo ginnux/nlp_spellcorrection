@@ -265,70 +265,7 @@ class spell_correction:
 
         # 存在实词错误,相当于判断无非词错误后来看实词错误
         if not_word != 1:
-            # 遍历句子单词的候选词，选出候选词在当前句中最合理的
-            word_candidates = []
-            best_sentence = []
-            best_prob = []
-            for k, word in enumerate(line):
-                # 跳过开头
-                if word == "<s>" or word == "</s>":
-                    continue
-                # 需要替换word成正确的单词
-                # Step1: 生成所有的(valid)候选集合
-                # 获得编辑距离小于2的候选列表
-                best_prob_for_word = []
-                best_sentence_for_word = []
-                candidates = self.CG.generate_candidates(
-                    word, max_distance=self.max_distance
-                )
-                candidates = list(candidates)
-
-                # 对长度小于等于3的词候选词默认自身
-                if len(word) <= 3:
-                    word_candidates = [word]  # 不替换单个字母
-                else:
-                    word_candidates = candidates
-                # 开始遍历候选词，存储对应修改过的句子，比较prob
-                for word_candidate in word_candidates:
-                    sentence_prob = 0
-                    sentence = line[:k] + [word_candidate] + line[k + 1 :]  # 替换word
-                    for m in range(
-                        len(sentence) - 1
-                    ):  # 采用链式法则计算概率，同时还有一项将当前词错写成候选词的概率
-                        sentence_word = sentence[m]
-                        sentence_word_next = sentence[m + 1]
-                        sentence_prob += calculate_smoothed_probability(
-                            self.bigram_count,
-                            self.term_count,
-                            self.V,
-                            (sentence_word, sentence_word_next),
-                            sentence_word,
-                        )
-                    # 获取候选词与单词的不同，返回一个字典，然后扔进channel_prob里查询
-                    pairs = get_key_value_pairs(word_candidate, word)
-                    for correct_char, incorrect_char in pairs.items():
-                        if (
-                            correct_char in self.channel_prob
-                            and incorrect_char in self.channel_prob[correct_char]
-                        ):
-                            sentence_prob += log(
-                                self.channel_prob[correct_char][incorrect_char]
-                            )
-                            sentence_prob -= log(0.0001)
-                    sentence_prob += log(0.0001)
-                    # 保存结果
-                    best_sentence_for_word.append(sentence)
-                    best_prob_for_word.append(sentence_prob)
-                # 保存单个单词所有候选词概率最小的结果，然后看下一个单词
-                best_sentence.append(
-                    best_sentence_for_word[
-                        best_prob_for_word.index(min(best_prob_for_word))
-                    ]
-                )
-                best_prob.append(min(best_prob_for_word))
-            # 去除开头符号<s>
-            corrected_line = best_sentence[best_prob.index(min(best_prob))][1:]
-
+            pass
         # 因为对所有词间加入了标点符号，要对句子标点符号修正
         corrected_sentence = " ".join(corrected_line)
 
